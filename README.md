@@ -40,3 +40,22 @@ The issue is due to a mismatch between the signature of the handle_receive funct
 To fix this, you need to correctly bind the bool parameter when calling boost::bind. Here’s how you can modify your code to properly handle this:
 
 This should be added to the end of the line of **socket_.async_receive_from(...,**batman**)
+
+=======================================================================================================================================================================================================================================
+
+```
+Expected '(' for function-style cast or type construction
+```
+This error comes from adding the type of a variable to your function when it doesn't need to be declared:
+```
+ln 1 main (){
+ln 2 bool batman = false;
+ln 3 func(bool batman){
+ln 4 blah;
+ln 5 }
+ln 6 std::cout<< "whatever"
+ln 7 func(bool batman);
+ln 8 return 0;
+ln 9 }
+```
+line 7 would give the error. Fixed by not declaring the passed varible.`func(batman)`
