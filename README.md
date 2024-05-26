@@ -35,4 +35,8 @@ This error came from not adding a passed variable **bool batman** correctly with
                                    remote_endpoint_,boost::bind(&UDPServer::handle_receive, this,boost::asio::placeholders::error,boost::asio::placeholders::bytes_transferred,batman));
     }
 ```
+The issue is due to a mismatch between the signature of the handle_receive function and the arguments being passed to it using boost::bind. Specifically, the handle_receive function takes an additional bool parameter that boost::asio::placeholders does not provide.
+
+To fix this, you need to correctly bind the bool parameter when calling boost::bind. Here’s how you can modify your code to properly handle this:
+
 This should be added to the end of the line of **socket_.async_receive_from(...,**batman**)
