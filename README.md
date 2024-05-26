@@ -14,3 +14,25 @@ https://stackoverflow.com/questions/11600782/what-does-it-mean-when-you-check-on
 
 
 Simply remove the 'recursive' from the Header Search Paths for the boost library. It appears that -I is set for the compilier in this case for every folder, which isn't required!
+
+
+=======================================================================================================================================================================================================================================
+
+```
+boost/bind/detail/result_traits.hpp:46:22 Type 'void (UDPServer::*)(const boost::system::error_code &, unsigned long, bool)' cannot be used prior to '::' because it has no members
+```
+This error came from not adding a passed variable **bool batman** correctly within the following code:
+
+```
+   UDPServer::UDPServer(boost::asio::io_context& io_context, short port,bool batman)
+    : socket_(io_context, udp::endpoint(udp::v4(), port)) {
+        start_receive();
+    }
+    
+
+    void UDPServer::start_receive(bool batman) {
+        socket_.async_receive_from(boost::asio::buffer(recv_buffer_),
+                                   remote_endpoint_,boost::bind(&UDPServer::handle_receive, this,boost::asio::placeholders::error,boost::asio::placeholders::bytes_transferred,batman));
+    }
+```
+This should be added to the end of the line of **socket_.async_receive_from(...,**batman**)
